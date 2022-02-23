@@ -115,7 +115,8 @@ async def on_command_error(ctx, error):
         embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url)
         embed.set_footer(text=f'{ctx.command.qualified_name}  |  {bot.latency * 1000:.0f}')
         embed.timestamp = datetime.utcnow()
-        await bot.get_channel(os.getenv("BOT_ERROR_CHANNEL")).send(embed=embed)
+        channelId = os.getenv('BOT_ERROR_CHANNEL')
+        await bot.get_channel(int(channelId)).send(embed=embed)
         raise error
 
 
