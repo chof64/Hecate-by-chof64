@@ -1,4 +1,6 @@
 
+# Changelog
+
 ## Version Timeline
 
 - 0.1.0: Initial release (February 23, 2022)
