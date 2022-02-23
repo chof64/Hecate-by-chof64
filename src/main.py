@@ -4,7 +4,6 @@
 
     The main file for the bot. This is the file that is called to start
     the bot.
-
 """
 
 from datetime import datetime
@@ -46,7 +45,7 @@ async def bot_presence():
     """
         Tasked function that control the bot's presence, and activity message.
 
-        FIX: CustomActivity message not working.
+        TODO: [FIX] CustomActivity message not working.
         TODO: CustomActivity showing environment resources (CPU, RAM, etc.)
     """
     activity_output = "This is a test. discord.CustomActivity"
@@ -60,7 +59,7 @@ if __name__ == "__main__":
 
     cogWhitelist = ["core"]
 
-    # NOTE: Load bot cog files, if white-listed.
+    # Load bot cog files, if white-listed.
     for ent in cogWhitelist:
         for file in os.listdir(f"./src/cogs/{ent}"):
             if file.endswith(".py"):
@@ -101,9 +100,9 @@ async def on_command_completion(ctx):
 @bot.event
 async def on_command_error(ctx, error):
     """
-    Function that is called when a command is ran, but encounters an error.
+        Function that is called when a command is ran, but encounters an error.
 
-    TODO: Work to sort out this code and make it more readable.
+        TODO: Work to sort out this code and make it more readable.
     """
     if isinstance(error, commands.CommandOnCooldown):
         minutes, seconds = divmod(error.retry_after, 60)
