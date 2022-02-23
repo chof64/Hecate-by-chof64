@@ -1,0 +1,10 @@
+version: "3.9"
+services:
+  main:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    image: chof64/hecate-by-chof64
+    # volumes: 
+    #   - .:/main
+    
