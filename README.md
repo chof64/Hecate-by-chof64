@@ -3,7 +3,7 @@
 
 ## Environmental Variables
 
-xBot Configuration (Non-Sensitive)
+Bot Configuration (Non-Sensitive)
 - **BOT_ERROR_CHANNEL** : Channel to send error messages to.
 - **BOT_PREFIX** : The prefix used to invoke the bot.
 
