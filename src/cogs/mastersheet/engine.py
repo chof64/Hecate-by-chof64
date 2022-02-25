@@ -179,7 +179,8 @@ class Helpers():
             Calls discord user information on specific nation from
             Cata Bot api.
 
-            TODO: Add fallback if no user is found. When API returns an error of "nation not in database"
+            TODO: Add fallback when API returns an error of "nation not in database."
+                  Return null, or something.
         """
         # 0: Variables.
         endpoint_url = f"https://cotl.pw/api/discord-user/{nation_id}"
@@ -257,7 +258,11 @@ class Adapters:
                 'avatar': response['avatar'],
             }
             # 2.2: Store data to database.
-            await db_conn.find_one_and_update({'nation_id': nation['nation_id']}, {'$set': {'user_discord': data}}, upsert=True)
+            await db_conn.find_one_and_update(
+                {'nation_id': nation['nation_id']}, 
+                {'$set': {'user_discord': data}}, 
+                upsert=True
+            )
 
 
 class MastersheetEngine(commands.Cog, name="coreowner"):
