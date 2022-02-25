@@ -6,15 +6,15 @@
     the bot.
 """
 
-from datetime import datetime
 import os
 import platform
 import random
+from datetime import datetime
 
+import discord
 from discord.ext import commands, tasks
 from discord.ext.commands import Bot
 from dotenv import load_dotenv
-import discord
 
 
 load_dotenv()
@@ -59,11 +59,11 @@ async def bot_presence():
 
 if __name__ == "__main__":
 
-    cogWhitelist = ["core"]
+    cogWhitelist = ['core','mastersheet']
 
     # Load bot cog files, if white-listed.
     for ent in cogWhitelist:
-        for file in os.listdir("./src/cogs/core"):
+        for file in os.listdir(f"./src/cogs/{ent}"):
             if file.endswith(".py"):
                 ext = file[:-3]
                 try:

@@ -7,9 +7,11 @@
 """
 
 from datetime import datetime
+
+import discord
 from discord.ext import commands
 from dotenv import load_dotenv
-import discord
+
 
 load_dotenv()
 
