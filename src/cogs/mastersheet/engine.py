@@ -21,23 +21,23 @@ load_dotenv()
 
 class Helpers():
     """
-        Functions that do the heavy lifting, and is managed by Adapters.
-        These are called by Adapters to get the data needed.
+        Helper functions do the heavy lifting. It is responible for calling external data,
+        and processing the data in preparation for the Adapters.
+        These functions aim to be reusable and can be used by other modules with 
+        little to no modification.
 
-        - stnd_nation_information
-        - cata_bot_discord
+        :: stnd_nation_information
+        :: cata_bot_discord
     """
-    # 0: Standard Nation Information (P&W GraphQL).
     async def stnd_nation_information(self, alliance_id):
         """
-            Standard Nation Information (P&W GraphQL)
+            Standard Nation Information calls all relevant information of all nations
+            in the given alliance from the P&W GraphQL API.
 
-            INFORMATION SCOPE:
+            These information include:
             - Expanded Nation Information
             - Expanded Cities Information
-            - Minimum Wars Information (Link to War Information)
-
-            TODO: Test this function to see if it works.
+            - Minimum Wars Information (ID, AttackerID, DefenderID)
         """
         # 0.0: Variables.
         endpoint_url = f"https://api.politicsandwar.com/graphql?api_key={os.getenv('PNW_API_KEY')}"
@@ -171,14 +171,15 @@ class Helpers():
                 data = await response.json()
 
         # 0.2: Prepare and return the data.
-        data = data["data"]["nations"]["data"]
-        return data
+        return data["data"]["nations"]["data"]
 
 
     async def cata_bot_discord(self, nation_id):
         """
             Calls discord user information on specific nation from
             Cata Bot api.
+
+            TODO: Add fallback if no user is found. When API returns an error of "nation not in database"
         """
         # 0: Variables.
         endpoint_url = f"https://cotl.pw/api/discord-user/{nation_id}"
@@ -194,30 +195,27 @@ class Helpers():
 
 class Adapters:
     """
-        Adapters
-
-        TABLE OF CONTENTS:
-        - pull_api_information
+        This is the adapters which combine and make Helpers useful. This is called by
+        either the commands or running tasks.
     """
     async def pull_api_information(self, alliance_id):
         """
-            Pulls the API information for the mastersheet.
+            Adapter: Initiate the pulling of the information needed from P&W GraphQl API.
+            This adapter is frequently called as the latest information is needed.
         """
         # 0.1: Variables
-        default_database = 'mastersheet-engine'
+        default_database = 'main-database'
 
-        # 0.2: Initialize and authenticate with the database. (MongoDB)
+        # 0.2: Authenticate with the database. (MongoDB)
         db_login_user = f'{os.getenv("DEF_MONGO_USERNAME")}:{os.getenv("DEF_MONGO_PASSWORD")}'
         db_address = f'{os.getenv("DEF_MONGO_URI")}/{default_database}'
         db_login_string = f'mongodb+srv://{db_login_user}@{db_address}?retryWrites=true&w=majority'
-
         client = motor.motor_asyncio.AsyncIOMotorClient(db_login_string)
 
         # 1.0: Get Nation Information.
         nation_information = await Helpers.stnd_nation_information(self, alliance_id)
         # 1.1: Store Nation Information to database.
         db_conn = client['mastersheet-engine'][f'{alliance_id}-nations-information']
-
         for entry in nation_information:
             await db_conn.find_one_and_update(
                 {'nation_id': entry['nation_id']},
@@ -225,8 +223,41 @@ class Adapters:
                 upsert=True
             )
 
-    async def pull_cata_bot_discord(self):
-        pass
+
+    async def pull_cata_bot_discord(self, alliance_id):
+        """
+            Adapter: Responsible for pulling discord user information from Cata Bot API.
+            This is called once a day or on demand.
+        """
+        # 0.0: Variables.
+        default_database = 'main-database'
+        # 0.1: Authenticate with the database. (MongoDB)
+        db_login_user = f'{os.getenv("DEF_MONGO_USERNAME")}:{os.getenv("DEF_MONGO_PASSWORD")}'
+        db_address = f'{os.getenv("DEF_MONGO_URI")}/{default_database}'
+        db_login_string = f'mongodb+srv://{db_login_user}@{db_address}?retryWrites=true&w=majority'
+        client = motor.motor_asyncio.AsyncIOMotorClient(db_login_string)
+
+        # 1.0: Get Nation Information.
+        db_conn = client['mastersheet-engine'][f'{alliance_id}-nations-information']
+        alliance_nations = await db_conn.find(projection={'nation_id':True,}).to_list(length=None)
+
+        # 2.0: Iterate thourgh all alliance nations and call API.
+        for nation in alliance_nations:
+            response = await Helpers.cata_bot_discord(self, nation['nation_id'])
+            # check if response has key "error", return value if true.
+            if response.get('error'):
+                continue
+            # 2.1: Prepare data to be stored to database.
+            data = {
+                'discord_id': response['id'],
+                'username': f'{response["name"]}#{response["discriminator"]}',
+                'nickname': response['nick'],
+                'name': response['name'],
+                'discriminator': response['discriminator'],
+                'avatar': response['avatar'],
+            }
+            # 2.2: Store data to database.
+            await db_conn.find_one_and_update({'nation_id': nation['nation_id']}, {'$set': {'user_discord': data}}, upsert=True)
 
 
 class MastersheetEngine(commands.Cog, name="coreowner"):
@@ -246,6 +277,7 @@ class MastersheetEngine(commands.Cog, name="coreowner"):
             TODO: Breakdown function into sub-functions for easier modifications, etc.
         """
         await Adapters.pull_api_information(self, alliance_id=alliance_id)
+        await Adapters.pull_cata_bot_discord(self, alliance_id=alliance_id)
 
 
 def setup(bot):
