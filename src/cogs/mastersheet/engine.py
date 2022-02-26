@@ -28,8 +28,12 @@ class Helpers():
 
         :: stnd_nation_information
         :: cata_bot_discord
+
+        TODO LEARN: Why does Pylint return a "R0201: Method could be a function"
+                    on these functions.
     """
-    async def stnd_nation_information(self, alliance_id):
+    @staticmethod
+    async def stnd_nation_information(alliance_id):
         """
             Standard Nation Information calls all relevant information of all nations
             in the given alliance from the P&W GraphQL API.
@@ -173,8 +177,8 @@ class Helpers():
         # 0.2: Prepare and return the data.
         return data["data"]["nations"]["data"]
 
-
-    async def cata_bot_discord(self, nation_id):
+    @staticmethod
+    async def cata_bot_discord(nation_id):
         """
             Calls discord user information on specific nation from
             Cata Bot api.
@@ -198,8 +202,12 @@ class Adapters:
     """
         This is the adapters which combine and make Helpers useful. This is called by
         either the commands or running tasks.
+
+        TODO LEARN: Why does Pylint return a "R0201: Method could be a function"
+                    on these functions.
     """
-    async def pull_api_information(self, alliance_id):
+    @staticmethod
+    async def pull_api_information(alliance_id):
         """
             Adapter: Initiate the pulling of the information needed from P&W GraphQl API.
             This adapter is frequently called as the latest information is needed.
@@ -214,7 +222,7 @@ class Adapters:
         client = motor.motor_asyncio.AsyncIOMotorClient(db_login_string)
 
         # 1.0: Get Nation Information.
-        nation_information = await Helpers.stnd_nation_information(self, alliance_id)
+        nation_information = await Helpers.stnd_nation_information(alliance_id)
         # 1.1: Store Nation Information to database.
         db_conn = client['mastersheet-engine'][f'{alliance_id}-nations-information']
         for entry in nation_information:
@@ -224,8 +232,8 @@ class Adapters:
                 upsert=True
             )
 
-
-    async def pull_cata_bot_discord(self, alliance_id):
+    @staticmethod
+    async def pull_cata_bot_discord(alliance_id):
         """
             Adapter: Responsible for pulling discord user information from Cata Bot API.
             This is called once a day or on demand.
@@ -244,7 +252,7 @@ class Adapters:
 
         # 2.0: Iterate thourgh all alliance nations and call API.
         for nation in alliance_nations:
-            response = await Helpers.cata_bot_discord(self, nation['nation_id'])
+            response = await Helpers.cata_bot_discord(nation['nation_id'])
             # check if response has key "error", return value if true.
             if response.get('error'):
                 continue
@@ -282,9 +290,13 @@ class MastersheetEngine(commands.Cog, name="coreowner"):
 
             TODO: Breakdown function into sub-functions for easier modifications, etc.
         """
-        await Adapters.pull_api_information(self, alliance_id=alliance_id)
-        await Adapters.pull_cata_bot_discord(self, alliance_id=alliance_id)
-        ctx.send(f'Mastersheet Engine has been called for {alliance_id}.')
+        # 0: Variables
+        bot_latency = round(self.bot.latency * 1000)
+
+        await Adapters.pull_api_information(alliance_id=alliance_id)
+        await Adapters.pull_cata_bot_discord(alliance_id=alliance_id)
+        await ctx.send(f'Mastersheet Engine has been called for {alliance_id}. | {bot_latency}')
+
 
 
 def setup(bot):
