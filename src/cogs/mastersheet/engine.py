@@ -64,8 +64,6 @@ class Helpers():
                 data = await resp.json()
 
         # 0.2: Prepare and return the data.
-        print(resp)
-        print(data)
         return data["data"]["nations"]["data"]
 
     @staticmethod
