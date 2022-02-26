@@ -197,8 +197,8 @@ async def on_command_error(ctx, error):
         error_random = random.randint(1, 100)
         error_code = f"{error_date}-{error_random}"
         int_information = (
-            '================================================== \n'
-            f'Error Code: {error_code}'
+            '```================================================== \n'
+            f'Error Code: {error_code} \n'
             '-------------------------------------------------- \n'
             f'Raw Command: {ctx.message.content} \n'
             f'Command Trace: {ctx.command.qualified_name} \n'
@@ -206,15 +206,15 @@ async def on_command_error(ctx, error):
             f'Guild: {ctx.message.guild.name} ({ctx.message.guild.id}) \n'
             f'Channel: {ctx.message.channel.name} ({ctx.message.channel.id})'
             f'\nAuthor: {ctx.message.author.name} ({ctx.message.author.id}) \n'
-            '================================================== \n'
+            '==================================================```'
         )
         ext_information = (
-            '================================================== \n'
-            f'Error Code: {error_code}'
+            '```================================================== \n'
+            f'Error Code: {error_code} \n'
             '-------------------------------------------------- \n'
             f'Raw Command: {ctx.message.content} \n'
             f'Command Trace: {ctx.command.qualified_name} \n'
-            '================================================== \n'
+            '==================================================```'
         )
         # 3.1: Internal Error Message (ERRINT)
         embed = discord.Embed(

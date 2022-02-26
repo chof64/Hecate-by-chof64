@@ -50,12 +50,12 @@ class Helpers():
             query_data = query_data['engine']['helpers']
             query_data = query_data['stnd_nation_information']['query_data']
         endpoint = (
-            'https://api.politicsandwar.com'
-            f'?apikey={os.getenv("PNW_API_KEY")}'
+            'https://api.politicsandwar.com/graphql'
+            f'?api_key={os.getenv("PNW_API_KEY")}'
             )
         query = (
-            '{nation(first:2, alliance_id:'+alliance_id+')'
-            'data{'+query_data+'}}'
+            '{nations(first:2, alliance_id:'+alliance_id+'){'
+            'data{'+query_data+'}}}'
         )
 
         # 0.1: Call the API.
@@ -64,6 +64,8 @@ class Helpers():
                 data = await resp.json()
 
         # 0.2: Prepare and return the data.
+        print(resp)
+        print(data)
         return data["data"]["nations"]["data"]
 
     @staticmethod
@@ -146,8 +148,9 @@ class Adapters:
 
         # 1.0: Get Nation Information.
         db_conn = client[using_database][using_collection]
-        nations = await db_conn.find(projection={'nation_id': True})
-        nations = nations.to_list(length=None)
+        nations = await db_conn.find(
+            projection={'nation_id': True}
+        ).to_list(length=None)
 
         # 2.0: Iterate thourgh all alliance nations and call API.
         for one in nations:
@@ -198,7 +201,7 @@ class MastersheetEngine(commands.Cog, name="coreowner"):
         # 3: Response to user command.
         await ctx.send(
             'Mastersheet Engine has been called for ' +
-            alliance_id + ' | ' + bot_latency
+            str(alliance_id) + ' | ' + str(bot_latency)
         )
 
 
