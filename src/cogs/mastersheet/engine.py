@@ -7,10 +7,10 @@
 """
 
 import os
-from datetime import datetime
+# from datetime import datetime
 
 import aiohttp
-import discord
+# import discord
 import motor.motor_asyncio
 from discord.ext import commands
 from dotenv import load_dotenv
@@ -23,7 +23,7 @@ class Helpers():
     """
         Helper functions do the heavy lifting. It is responible for calling external data,
         and processing the data in preparation for the Adapters.
-        These functions aim to be reusable and can be used by other modules with 
+        These functions aim to be reusable and can be used by other modules with
         little to no modification.
 
         :: stnd_nation_information
@@ -259,8 +259,8 @@ class Adapters:
             }
             # 2.2: Store data to database.
             await db_conn.find_one_and_update(
-                {'nation_id': nation['nation_id']}, 
-                {'$set': {'user_discord': data}}, 
+                {'nation_id': nation['nation_id']},
+                {'$set': {'user_discord': data}},
                 upsert=True
             )
 
@@ -284,6 +284,7 @@ class MastersheetEngine(commands.Cog, name="coreowner"):
         """
         await Adapters.pull_api_information(self, alliance_id=alliance_id)
         await Adapters.pull_cata_bot_discord(self, alliance_id=alliance_id)
+        ctx.send(f'Mastersheet Engine has been called for {alliance_id}.')
 
 
 def setup(bot):
