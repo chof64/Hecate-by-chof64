@@ -267,11 +267,12 @@ class Adapters:
 
 class MastersheetEngine(commands.Cog, name="coreowner"):
     """
-        Main class for all command functions. This is where the bot
-        interacts when a user initiates a command found in this cog.
+        Main class for all command functions. This is what the bot calls
+        first when a user uses a command in this cog file.
     """
     def __init__(self, bot):
         self.bot = bot
+
 
     @commands.command(name='msengine', hidden=True)
     @commands.has_any_role(">> SUDO <<", ">> L10 <<", )

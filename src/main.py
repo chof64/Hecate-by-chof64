@@ -68,10 +68,31 @@ if __name__ == "__main__":
                 ext = file[:-3]
                 try:
                     bot.load_extension(f"cogs.{ent}.{ext}")
-                    print(f"Loaded extension '{ent}.{ext}'")
-                except Exception as e:
-                    excptn = f"{type(e).__name__}: {e}"
-                    print(f"Failed to load extension {ent}.{ext}\n{excptn}")
+                    print(f"==> Loaded extension '{ent}.{ext}'")
+                except discord.ext.commands.errors.NoEntryPointError as e:
+                    print('<>')
+                    print(f'==> ERROR: {ent}.{ext} has no entry point.')
+                    print(f'==> ACTION: Skipping extension "{ent}.{ext}"')
+                    print(f'==> MESSAGE: {e}')
+                    print('</>')
+                except discord.ext.commands.errors.ExtensionAlreadyLoaded as e:
+                    print('<>')
+                    print(f'==> ERROR: {ent}.{ext} is already loaded.')
+                    print(f'==> ACTION: Skipping extension "{ent}.{ext}".')
+                    print(f'==> MESSAGE: {e}')
+                    print('</>')
+                except discord.ext.commands.errors.ExtensionNotFound as e:
+                    print('<>')
+                    print(f'==> ERROR: {ent}.{ext} does not exist.')
+                    print(f'==> ACTION: Extension "{ent}.{ext}" not loaded.')
+                    print(f'==> MESSAGE: {e}')
+                    print('</>')
+                except discord.ext.commands.errors.ExtensionFailed as e:
+                    print('<>')
+                    print(f'==> ERROR: {ent}.{ext} failed to load.')
+                    print(f'==> ACTION: Extension "{ent}.{ext}" not loaded.')
+                    print(f'==> MESSAGE: {e}')
+                    print('</>')
 
 
 @bot.event
