@@ -1,0 +1,9 @@
+{
+    "engine": {
+        "helpers": {
+            "stnd_nation_information": {
+                "query_data": "nation_id: id, alliance_id, alliance_position, nation_name, leader_name, continent, warpolicy, dompolicy, color num_cities, cities{ id, nation_id, name, date, infrastructure, land, powered, oilpower, windpower, coalpower, nuclearpower, coalmine, oilwell, uramine, barracks, farm, policestation, hospital, recyclingcenter, subway, supermarket, bank, mall, stadium, leadmine, ironmine, bauxitemine, gasrefinery, aluminumrefinery, steelmill, munitionsfactory, factory, airforcebase, drydock, nukedate }, score, update_tz, population, flag, vmode, beigeturns, espionage_available, last_active, date, soldiers, tanks, aircraft, ships, missiles, nukes, spies, nation_discord: discord, wars{ id, attid, defid } turns_since_last_city, turns_since_last_project, money, coal, oil, uranium, iron, bauxite, lead, gasoline, munitions, steel, aluminum, food, projects, project_bits, ironw, bauxitew, armss, egr, massirr, itc, mlp, nrf, irond, vds, cia, cfce, propb, uap, city_planning, adv_city_planning, space_program, spy_satellite, moon_landing, pirate_economy, recycling_initiative, telecom_satellite, green_tech, arable_land_agency, clinical_research_center, specialized_police_training, adv_engineering_corps, wars_won, wars_lost, tax_id, alliance_seniority" 
+            }
+        }
+    }
+}

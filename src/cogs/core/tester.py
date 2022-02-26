@@ -9,7 +9,6 @@ import discord
 from discord.ext import commands
 from dotenv import load_dotenv
 
-
 load_dotenv()
 
 
@@ -35,7 +34,8 @@ class CoreTester(commands.Cog, name="coretester"):
         if verify != "verify":
             example = ">>testerror verify"
             latency = round(self.bot.latency * 1000)
-            await ctx.send(f'You need to type "verify" to execute command. `{example}` | {latency}')
+            await ctx.send(f'''You need to type "verify" to execute command.
+             `E.g: {example}` | {latency}''')
         else:
             raise discord.DiscordException("This is a test error.")
 

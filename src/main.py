@@ -16,7 +16,6 @@ from discord.ext import commands, tasks
 from discord.ext.commands import Bot
 from dotenv import load_dotenv
 
-
 load_dotenv()
 
 
@@ -59,7 +58,7 @@ async def bot_presence():
 
 if __name__ == "__main__":
 
-    cogWhitelist = ['core','mastersheet']
+    cogWhitelist = ['core', 'mastersheet']
 
     # Load bot cog files, if white-listed.
     for ent in cogWhitelist:
@@ -98,7 +97,8 @@ if __name__ == "__main__":
 @bot.event
 async def on_message(message):
     """
-        Function that is called when a message is sent to a channel that the bot has permissions on.
+        Function that is called when a message is sent to a channel that the
+        bot has permissions on.
     """
     if message.author == bot.user or message.author.bot:
         return
@@ -110,8 +110,8 @@ async def on_command_completion(ctx):
     """
         Function that is called when a command was successfully ran.
 
-        TODO: Add file logging feature, to log all commands successfully ran by users in a file,
-              for long term storage. For audit purposes.
+        TODO: Add file logging feature, to log all commands successfully
+        ran by users in a file, for long term storage. For audit purposes.
     """
     executed_command = ctx.command.qualified_name
     print(f"""{datetime.utcnow()}:
@@ -193,33 +193,36 @@ async def on_command_error(ctx, error):
         # 3.0: Variables
         command_path = ctx.command.qualified_name
         bot_latency = round(bot.latency * 1000)
-        error_code = f"{datetime.utcnow().strftime('%Y%m%d')}-{random.randint(1, 9999)}"
-        internal_expanded_information = f"""```
-==================================================
-Error Code: {error_code}
---------------------------------------------------
-Raw Command: {ctx.message.content}
-Command Trace: {ctx.command.qualified_name}
---------------------------------------------------
-Guild: {ctx.guild.name} (ID: {ctx.message.guild.id})
-Channel: {ctx.message.channel.name} (ID: {ctx.message.channel.id})
-Author: {ctx.message.author.name} (ID: {ctx.message.author.id})
-==================================================```"""
-        external_expanded_information = f"""```
-==================================================
-Error Code: {error_code}
---------------------------------------------------
-Raw Command: {ctx.message.content}
-Command Trace: {ctx.command.qualified_name}
-==================================================```"""
-
+        error_date = datetime.utcnow().strftime("%Y/%m/%d %H:%M:%S")
+        error_random = random.randint(1, 100)
+        error_code = f"{error_date}-{error_random}"
+        int_information = (
+            '================================================== \n'
+            f'Error Code: {error_code}'
+            '-------------------------------------------------- \n'
+            f'Raw Command: {ctx.message.content} \n'
+            f'Command Trace: {ctx.command.qualified_name} \n'
+            '-------------------------------------------------- \n'
+            f'Guild: {ctx.message.guild.name} ({ctx.message.guild.id}) \n'
+            f'Channel: {ctx.message.channel.name} ({ctx.message.channel.id})'
+            f'\nAuthor: {ctx.message.author.name} ({ctx.message.author.id}) \n'
+            '================================================== \n'
+        )
+        ext_information = (
+            '================================================== \n'
+            f'Error Code: {error_code}'
+            '-------------------------------------------------- \n'
+            f'Raw Command: {ctx.message.content} \n'
+            f'Command Trace: {ctx.command.qualified_name} \n'
+            '================================================== \n'
+        )
         # 3.1: Internal Error Message (ERRINT)
         embed = discord.Embed(
             title="Uncaught Error",
             description=f'```{error}```',
             color=0xBC2C1A
             )
-        embed.add_field(name="Expanded Information", value=internal_expanded_information)
+        embed.add_field(name="Expanded Information", value=int_information)
         embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url)
         embed.set_footer(text=f'{command_path}  |  {bot_latency}')
         embed.timestamp = datetime.utcnow()
@@ -231,7 +234,7 @@ Command Trace: {ctx.command.qualified_name}
             description=f'```{error}```',
             color=0xBC2C1A
             )
-        embed.add_field(name="Expanded Information", value=external_expanded_information)
+        embed.add_field(name="Expanded Information", value=ext_information)
         embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url)
         embed.set_footer(text=f'{command_path}  |  {bot_latency}')
         embed.timestamp = datetime.utcnow()
