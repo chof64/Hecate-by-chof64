@@ -58,7 +58,7 @@ async def bot_presence():
 
 if __name__ == "__main__":
 
-    cogWhitelist = ['core', 'mastersheet']
+    cogWhitelist = ['core', 'catascroll']
 
     # Load bot cog files, if white-listed.
     for ent in cogWhitelist:

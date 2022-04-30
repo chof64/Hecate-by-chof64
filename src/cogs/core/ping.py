@@ -24,7 +24,7 @@ class CorePing(commands.Cog, name="coreping"):
         self.bot = bot
 
     @commands.command(name='ping', hidden=True)
-    @commands.has_any_role(">> L9: DEV <<", ">> SUDO <<")
+    @commands.has_any_role(">> SUDO <<")
     async def hecate_ping(self, ctx):
         """
             A command that returns the bot's latency.

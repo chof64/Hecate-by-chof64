@@ -21,7 +21,7 @@ class CoreTester(commands.Cog, name="coretester"):
         self.bot = bot
 
     @commands.command(name='testerror', hidden=True)
-    @commands.has_any_role(">> L10: DEV <<", ">> SUDO <<")
+    @commands.has_any_role(">> SUDO <<")
     async def test_error(self, ctx, verify):
         """
             Command: >>ping
