@@ -1,5 +1,12 @@
 # Hecate-by-chof64
 
+
+## Color Palettes
+
+- 
+
+
+
 ## Commit Message Guide
 
 - **ADD**: Added a new file/feature.
