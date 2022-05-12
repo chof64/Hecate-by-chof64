@@ -1,0 +1,13 @@
+
+# Remote Repository (GitHub).
+.git
+
+# Python Cache and temporary files.
+__pycache__/
+
+# VSCode User Configurations.
+.devcontainer/
+.vscode/
+
+# Linters and Python tools configuration.
+.pylintrc
