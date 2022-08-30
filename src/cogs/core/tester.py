@@ -1,4 +1,3 @@
-
 """
     ./src/cogs/core/tester.py
 
@@ -8,6 +7,8 @@
 import discord
 from discord.ext import commands
 from dotenv import load_dotenv
+
+from components.responses import GenericResponse
 
 load_dotenv()
 
@@ -39,6 +40,19 @@ class CoreTester(commands.Cog, name="coretester"):
         else:
             raise discord.DiscordException("This is a test error.")
 
+    @commands.command(name="testroles", hidden=True)
+    @commands.has_any_role(">> NO_ROLE <<")
+    async def test_roles(self, ctx, *,message):
+        """
+            Command: >>testroles
+            Roles (any of): >> NO_ROLE <<
+        """
+        await ctx.send(message)
+
+    @commands.command(name="testembed", hidden=True)
+    @commands.has_any_role(">> SUDO <<")
+    async def test_embed(self, ctx,*, message):
+        await GenericResponse.resp_successful(self, ctx, title="Successful Execution", description=message)
 
 def setup(bot):
     """

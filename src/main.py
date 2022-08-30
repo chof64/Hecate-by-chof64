@@ -18,6 +18,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+from components.responses import SpecificError
 
 intents = discord.Intents.default()
 bot = Bot(command_prefix=os.getenv("BOT_PREFIX"), intents=intents)
@@ -49,12 +50,9 @@ async def bot_presence():
         TODO: [FIX] CustomActivity message not working.
         TODO: CustomActivity showing environment resources (CPU, RAM, etc.)
     """
-    activity_output = "This is a test. discord.CustomActivity"
     await bot.change_presence(
         status=discord.Status.dnd,
-        activity=discord.CustomActivity(name=activity_output)
     )
-
 
 if __name__ == "__main__":
 
@@ -69,30 +67,14 @@ if __name__ == "__main__":
                     bot.load_extension(f"cogs.{ent}.{ext}")
                     print(f"==> Loaded extension '{ent}.{ext}'")
                 except discord.ext.commands.errors.NoEntryPointError as e:
-                    print('<>')
-                    print(f'==> ERROR: {ent}.{ext} has no entry point.')
-                    print(f'==> ACTION: Skipping extension "{ent}.{ext}"')
-                    print(f'==> MESSAGE: {e}')
-                    print('</>')
+                    # print with red color.
+                    print(f"!!! Failed to load extension '{ent}.{ext}' \n{e}")
                 except discord.ext.commands.errors.ExtensionAlreadyLoaded as e:
-                    print('<>')
-                    print(f'==> ERROR: {ent}.{ext} is already loaded.')
-                    print(f'==> ACTION: Skipping extension "{ent}.{ext}".')
-                    print(f'==> MESSAGE: {e}')
-                    print('</>')
+                    print(f"!!! Failed to load extension '{ent}.{ext}' \n{e}")
                 except discord.ext.commands.errors.ExtensionNotFound as e:
-                    print('<>')
-                    print(f'==> ERROR: {ent}.{ext} does not exist.')
-                    print(f'==> ACTION: Extension "{ent}.{ext}" not loaded.')
-                    print(f'==> MESSAGE: {e}')
-                    print('</>')
+                    print(f"!!! Failed to load extension '{ent}.{ext}' \n{e}")
                 except discord.ext.commands.errors.ExtensionFailed as e:
-                    print('<>')
-                    print(f'==> ERROR: {ent}.{ext} failed to load.')
-                    print(f'==> ACTION: Extension "{ent}.{ext}" not loaded.')
-                    print(f'==> MESSAGE: {e}')
-                    print('</>')
-
+                    print(f"!!! Failed to load extension '{ent}.{ext}' \n{e}")
 
 @bot.event
 async def on_message(message):
@@ -101,7 +83,7 @@ async def on_message(message):
         bot has permissions on.
     """
     if message.author == bot.user or message.author.bot:
-        return
+        return  # Do nothing if the message is from the bot.
     await bot.process_commands(message)
 
 
@@ -110,15 +92,8 @@ async def on_command_completion(ctx):
     """
         Function that is called when a command was successfully ran.
 
-        TODO: Add file logging feature, to log all commands successfully
-        ran by users in a file, for long term storage. For audit purposes.
+        TODO: Send successful message to `commands-monitor` channel.
     """
-    executed_command = ctx.command.qualified_name
-    print(f"""{datetime.utcnow()}:
-                Executed {executed_command}
-                command in {ctx.guild.name} (ID: {ctx.message.guild.id})
-                by {ctx.message.author} (ID: {ctx.message.author.id})""")
-
     command_executed_strip = {
         'Date': datetime.utcnow().strftime("%Y/%m/%d %H:%M:%S"),
         'Command': ctx.command.qualified_name,
@@ -139,10 +114,9 @@ async def on_command_error(ctx, error):
     """
         Function that is called when a command is ran, but encounters an error.
 
-        TODO: Work to sort out this code and make it more readable.
-        TODO ENH: Compress and simplify section 3.
+        TODO: Refactor to make it readable, breakdown into smaller components.
     """
-    # 0: NOTIFY: User has existing command cooldown time.
+    # NOTIFY: User has existing command cooldown time.
     if isinstance(error, commands.CommandOnCooldown):
         minutes, seconds = divmod(error.retry_after, 60)
         hours, minutes = divmod(minutes, 60)
@@ -161,21 +135,14 @@ async def on_command_error(ctx, error):
         embed.set_footer(text=f'{command_path}  |  {bot_latency}')
         embed.timestamp = datetime.utcnow()
         await ctx.send(embed=embed)
-    # 1: NOTIFY: User has no permission to run command.
+    # NOTIFY: User has no permission to run command.
     elif isinstance(error, commands.MissingPermissions):
-        embed = discord.Embed(
-            title="Error!",
-            description="You are missing the permission `" + ", ".join(
-                error.missing_perms) + "` to execute this command!",
-            color=0xD17B0F
-        )
-        embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url)
-        command_path = ctx.command.qualified_name
-        bot_latency = round(bot.latency * 1000)
-        embed.set_footer(text=f'{command_path}  |  {bot_latency}')
-        embed.timestamp = datetime.utcnow()
-        await ctx.send(embed=embed)
-    # 2: NOTIFY: User command has missing required argument.
+        await SpecificError.no_permissions(bot, ctx, error)
+    elif isinstance(error, commands.MissingRole):
+        await SpecificError.no_permissions(bot, ctx, error)
+    elif isinstance(error, commands.MissingAnyRole):
+        await SpecificError.no_permissions(bot, ctx, error)
+    # NOTIFY: User command has missing required argument.
     elif isinstance(error, commands.MissingRequiredArgument):
         embed = discord.Embed(
             title="Error!",
@@ -188,7 +155,7 @@ async def on_command_error(ctx, error):
         embed.set_footer(text=f'{command_path}  |  {bot_latency}')
         embed.timestamp = datetime.utcnow()
         await ctx.send(embed=embed)
-    # 3: NOTIFY/ERRINT: Command has resulted in an error.
+    # NOTIFY/ERRINT: Command has resulted in an error.
     else:
         # 3.0: Variables
         command_path = ctx.command.qualified_name

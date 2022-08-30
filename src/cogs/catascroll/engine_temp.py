@@ -20,6 +20,13 @@ class CataScrollNations(commands.Cog, name=("CataScroll Mastersheet - "
         self.bot = bot
 
 
+    # @commands.command(name="csengine")
+    # async def cs_engine(self, ctx):
+    #     """
+    #         This command is used for interacting with CataScroll Engine backend.
+    #     """
+    #     await ctx.send("csengine: under development.")
+
     @commands.command(name='nations', aliases=["csnhelp","csninfo"],
     hidden=True)
     async def csn_info(self, ctx):
@@ -34,10 +41,6 @@ class CataScrollNations(commands.Cog, name=("CataScroll Mastersheet - "
             "If you have any questions, or found any bugs, please contact "
             f"the bot's developer, <@!{self.bot.owner_id}>."
         )
-
-
-    #//-----------------------------------------------------------------------
-    # ENGINE CONTROLS.
 
 
     async def engine_start(self, ctx):
