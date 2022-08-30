@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "hecate-by-chof64"
+version = "1.0.0"
+description = "Hecate is a Discord bot that interacts with Politics and War API to get information."
+authors = ["Chad Fernandez <chadfernandez@duck.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+
+[tool.poetry.dev-dependencies]
+black = "^22.6.0"
+pylint = "^2.15.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
