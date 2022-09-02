@@ -4,7 +4,7 @@
 ## Super Linter GitHub Actions ##
 #################################
 #################################
-name: Lint Code Base
+name: GitHub Super Linter
 
 #
 # Documentation:
@@ -54,3 +54,6 @@ jobs:
           # Change to 'master' if your main branch differs
           DEFAULT_BRANCH: main
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+          LINTER_RULES_PATH: /
+          PYTHON_PYLINT_CONFIG_FILE: .pylintrc
