@@ -38,22 +38,23 @@ repos:
       - id: flake8
         name: Flake8
 
-  - repo: https://github.com/PyCQA/pylint
-    rev: v2.15.0
-    hooks:
-      - id: pylint
-        name: Pylint
-
-  # - repo: local
+  # - repo: https://github.com/PyCQA/pylint
+  #   rev: v2.15.0
   #   hooks:
-  #     - id: poetry-pylint
-  #       name: Poetry Run Pylint
-  #       entry: poetry run pylint
-  #       args:
-  #         - "main.py"
-  #         - "core"
-  #         - "components"
-  #         - "cogs"
-  #       language: system
-  #       always_run: true
-  #       pass_filenames: false
+  #     - id: pylint
+  #       name: Pylint
+
+  - repo: local
+    hooks:
+      - id: poetry-pylint
+        name: Poetry Run Pylint
+        entry: poetry run pylint
+        # args:
+        #   - "main.py"
+        #   - "core"
+        #   - "components"
+        #   - "cogs"
+        language: system
+        # always_run: true
+        pass_filenames: true
+        types_or: [python]
