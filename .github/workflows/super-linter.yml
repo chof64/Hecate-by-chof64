@@ -16,8 +16,8 @@ name: GitHub Super Linter
 #############################
 on:
   push:
-    # branches-ignore: [master, main]
-    # Remove the line above to run when pushing to master
+  # branches-ignore: [master, main]
+  # Remove the line above to run when pushing to master
   pull_request:
     branches: [master, main]
 
@@ -55,7 +55,6 @@ jobs:
           DEFAULT_BRANCH: main
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-
           LINTER_RULES_PATH: /
 
           # LINTERS: ENV
@@ -64,10 +63,8 @@ jobs:
           # LINTERS: PYTHON
           VALIDATE_PYTHON: true
           VALIDATE_PYTHON_BLACK: true
-          # VALIDATE_PYTHON_FLAKE8: true
-          # VALIDATE_PYTHON_ISORT: true
+          VALIDATE_PYTHON_FLAKE8: true
+          VALIDATE_PYTHON_ISORT: true
           # VALIDATE_PYTHON_MYPY: true
-          VALIDATE_PYTHON_PYLINT: true
-          PYTHON_PYLINT_CONFIG_FILE: .pylintrc
-
-
+          # VALIDATE_PYTHON_PYLINT: true
+          # PYTHON_PYLINT_CONFIG_FILE: .pylintrc
