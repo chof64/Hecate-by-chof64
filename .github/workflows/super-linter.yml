@@ -55,5 +55,21 @@ jobs:
           DEFAULT_BRANCH: main
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+
           LINTER_RULES_PATH: /
+
+          # LINTERS: PYTHON
+          VALIDATE_PYTHON: true
+            # Black
+          VALIDATE_PYTHON_BLACK: true
+            # Flake8
+          VALIDATE_PYTHON_FLAKE8: false
+            # Isort
+          VALIDATE_PYTHON_ISORT: false
+            # Mypy
+          VALIDATE_PYTHON_MYPY: false
+            # Pylint
+          VALIDATE_PYTHON_PYLINT: true
           PYTHON_PYLINT_CONFIG_FILE: .pylintrc
+
+

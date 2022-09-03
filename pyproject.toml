@@ -6,6 +6,9 @@ authors = ["Chad Fernandez <chadfernandez@duck.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.10"
+"discord.py" = "^2.0.1"
+asyncio = "^3.4.3"
+python-dotenv = "^0.20.0"
 
 [tool.poetry.dev-dependencies]
 black = "^22.6.0"
