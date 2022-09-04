@@ -4,7 +4,8 @@
   <br />
   <br />
 </p>
-<img align="center" src="https://github.com/chof64/Hecate-by-chof64/actions/workflows/super-linter.yml/badge.svg?branch=main)](https://github.com/chof64/Hecate-by-chof64/actions/workflows/super-linter.yml" alt="GitHub Super Linter"></img>
+
+[![GitHub Super Linter](https://github.com/chof64/Hecate-by-chof64/actions/workflows/super-linter.yml/badge.svg?branch=main)](https://github.com/chof64/Hecate-by-chof64/actions/workflows/super-linter.yml) [![Pylint](https://github.com/chof64/Hecate-by-chof64/actions/workflows/pylint.yml/badge.svg)](https://github.com/chof64/Hecate-by-chof64/actions/workflows/pylint.yml)
 
 ## Installation
 
