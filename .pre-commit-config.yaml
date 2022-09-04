@@ -20,11 +20,11 @@ repos:
       - id: bandit
         name: Bandit - a security linter from PyCQA
 
-  - repo: https://github.com/PyCQA/isort
-    rev: 5.10.1
-    hooks:
-      - id: isort
-        name: isort
+  # - repo: https://github.com/PyCQA/isort
+  #   rev: 5.10.1
+  #   hooks:
+  #     - id: isort
+  #       name: isort
 
   - repo: https://github.com/psf/black
     rev: 22.8.0
@@ -32,11 +32,11 @@ repos:
       - id: black
         name: Black - code formatter
 
-  - repo: https://github.com/PyCQA/flake8
-    rev: 5.0.4
-    hooks:
-      - id: flake8
-        name: Flake8
+  # - repo: https://github.com/PyCQA/flake8
+  #   rev: 5.0.4
+  #   hooks:
+  #     - id: flake8
+  #       name: Flake8
 
   # - repo: https://github.com/PyCQA/pylint
   #   rev: v2.15.0
