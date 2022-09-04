@@ -1,0 +1,60 @@
+repos:
+  - repo: local
+    hooks:
+      - id: poetry-export-prod
+        name: Poetry Export Production to requirements.txt
+        entry: poetry export -f requirements.txt --output requirements.txt
+        language: system
+        always_run: true
+        pass_filenames: false
+      - id: poetry-export-dev
+        name: Poetry Export Developmentt to requirements.txt
+        entry: poetry export -f requirements.txt --dev --output requirements-dev.txt
+        language: system
+        always_run: true
+        pass_filenames: false
+
+  - repo: https://github.com/PyCQA/bandit
+    rev: 1.7.4
+    hooks:
+      - id: bandit
+        name: Bandit - a security linter from PyCQA
+
+  # - repo: https://github.com/PyCQA/isort
+  #   rev: 5.10.1
+  #   hooks:
+  #     - id: isort
+  #       name: isort
+
+  - repo: https://github.com/psf/black
+    rev: 22.8.0
+    hooks:
+      - id: black
+        name: Black - code formatter
+
+  # - repo: https://github.com/PyCQA/flake8
+  #   rev: 5.0.4
+  #   hooks:
+  #     - id: flake8
+  #       name: Flake8
+
+  # - repo: https://github.com/PyCQA/pylint
+  #   rev: v2.15.0
+  #   hooks:
+  #     - id: pylint
+  #       name: Pylint
+
+  - repo: local
+    hooks:
+      - id: poetry-pylint
+        name: Poetry Run Pylint
+        entry: poetry run pylint
+        # args:
+        #   - "main.py"
+        #   - "core"
+        #   - "components"
+        #   - "cogs"
+        language: system
+        # always_run: true
+        pass_filenames: true
+        types_or: [python]
